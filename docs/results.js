@@ -1,6 +1,6 @@
 const POLL_ID = "2026-awards";
 const LS_WORKER_URL = "admin:workerUrl";
-const ADMIN_KEY = "benim-gizli-admin-key-2026";
+const ADMIN_KEY = "NestlePureLife";
 
 
 const el = (id) => document.getElementById(id);
