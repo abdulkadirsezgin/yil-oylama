@@ -184,10 +184,15 @@ async function verifyToken() {
       return;
     }
 
-    verifiedToken = token;
-    setStatus(status, "Token geçerli. Oylamaya başlayabilirsin.", "ok");
-    el("pollArea").classList.remove("hidden");
-    updateCompletion();
+verifiedToken = token;
+
+// yeni token ile yeni oy başlıyor → önce formu sıfırla
+resetSelections();
+
+setStatus(status, "Token geçerli. Oylamaya başlayabilirsin.", "ok");
+el("pollArea").classList.remove("hidden");
+updateCompletion();
+
   } catch (e) {
     verifiedToken = null;
     setStatus(status, "Bağlantı hatası. API erişilemiyor.", "bad");
