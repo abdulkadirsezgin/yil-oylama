@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Oylama Sonuçları</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="row space">
+      <div>
+        <h1>Oylama Sonuçları</h1>
+        <p class="muted">Bu sayfa Cloudflare Worker’dan anlık sayımları çeker.</p>
+      </div>
+      <div class="row">
+        <a class="muted" href="./index.html">Oylama Sayfası</a>
+      </div>
+    </div>
+
+    <section class="card">
+      <h2>Ayarlar</h2>
+      <div class="row">
+        <input id="workerUrl" type="text" placeholder="https://poll-api-2026.xxx.workers.dev" />
+        <button id="btnSave" type="button">Kaydet</button>
+      </div>
+      <p class="muted">Worker URL’ini bir kere girmen yeterli; tarayıcıda saklanır.</p>
+    </section>
+
+    <section class="card">
+      <div class="row space">
+        <div>
+          <h2>Özet</h2>
+          <div id="summary" class="status muted">Henüz yüklenmedi.</div>
+        </div>
+        <button id="btnRefresh" class="primary" type="button">Yenile</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Detaylı Sonuçlar</h2>
+      <div id="tables"></div>
+      <p id="err" class="status"></p>
+    </section>
+  </div>
+
+  <script src="./results.js"></script>
+</body>
+</html>
