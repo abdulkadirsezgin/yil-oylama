@@ -1,6 +1,7 @@
 const POLL_ID = "2026-awards";
 const LS_WORKER_URL = "admin:workerUrl";
-const ADMIN_KEY = "NestlePureLife";
+const LS_ADMIN_KEY = "admin:adminKey";
+
 
 
 const el = (id) => document.getElementById(id);
@@ -10,6 +11,13 @@ function setStatus(target, msg, cls) {
   if (cls) target.classList.add(cls);
   target.textContent = msg;
 }
+function getAdminKey() {
+  return localStorage.getItem(LS_ADMIN_KEY) || "";
+}
+function saveAdminKey(k) {
+  localStorage.setItem(LS_ADMIN_KEY, k);
+}
+
 
 function normalizeBaseUrl(u) {
   return u.replace(/\/+$/, "");
@@ -46,7 +54,7 @@ async function loadMeta() {
 }
 
 async function fetchResultsFull(baseUrl) {
-const url = `${baseUrl}/results/full?pollId=${encodeURIComponent(POLL_ID)}&key=${encodeURIComponent(ADMIN_KEY)}`;
+const url = `${baseUrl}/results/full?pollId=${encodeURIComponent(POLL_ID)}`;
   const res = await fetch(url);
   const data = await res.json().catch(()=> ({}));
   if (!res.ok || !data.ok) {
@@ -142,9 +150,13 @@ async function refresh() {
 
 el("btnSave").addEventListener("click", () => {
   const v = el("workerUrl").value.trim();
+  const k = el("adminKey").value.trim();
   if (!v) return;
   saveWorkerBaseUrl(v);
+  if (k) saveAdminKey(k);
   refresh();
+});
+
 });
 
 el("btnRefresh").addEventListener("click", refresh);
@@ -152,4 +164,8 @@ el("btnRefresh").addEventListener("click", refresh);
 // ilk yükleme
 const existing = getWorkerBaseUrl();
 if (existing) el("workerUrl").value = existing;
+
+const existingKey = getAdminKey();
+if (existingKey) el("adminKey").value = existingKey;
+
 refresh();
