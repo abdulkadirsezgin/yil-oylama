@@ -60,4 +60,18 @@ button:disabled { opacity: .5; cursor: not-allowed; }
     0 0 26px rgba(255, 138, 0, .35);
 }
 
+#countdown{
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+#countdown.closed{
+  color: #ff4d4d;
+}
+
+#countdown.running{
+  color: #4cd964;
+}
+
+
 
