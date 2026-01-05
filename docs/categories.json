@@ -2,7 +2,7 @@
   { "id": "moda",   "name": "Yılın Moda İkonu", "maxSelections": 1, "order": 1 },
   { "id": "geveze", "name": "Yılın Gevezesi",   "maxSelections": 1, "order": 2 },
   { "id": "gocebe", "name": "Yılın Göçebesi",   "maxSelections": 1, "order": 3 },
-  { "id": "obezi",  "name": "Yılın Obezi",      "maxSelections": 1, "order": 4 },
+  { "id": "obezi",  "name": "Yılın Gurmesi",      "maxSelections": 1, "order": 4 },
   { "id": "trol",   "name": "Yılın Trolü",      "maxSelections": 1, "order": 5 }
 ]
 
