@@ -54,14 +54,21 @@ async function loadMeta() {
 }
 
 async function fetchResultsFull(baseUrl) {
-const url = `${baseUrl}/results/full?pollId=${encodeURIComponent(POLL_ID)}`;
+  const key = getAdminKey();
+  if (!key) {
+    throw new Error("Admin key girmen gerekiyor.");
+  }
+
+  const url = `${baseUrl}/results/full?pollId=${encodeURIComponent(POLL_ID)}&key=${encodeURIComponent(key)}`;
   const res = await fetch(url);
   const data = await res.json().catch(()=> ({}));
+
   if (!res.ok || !data.ok) {
     throw new Error(data?.message || `Sonuçlar alınamadı (${res.status})`);
   }
   return data;
 }
+
 
 function renderTables({ categories, peopleById }, apiData) {
   const wrap = el("tables");
@@ -157,7 +164,6 @@ el("btnSave").addEventListener("click", () => {
   refresh();
 });
 
-});
 
 el("btnRefresh").addEventListener("click", refresh);
 
