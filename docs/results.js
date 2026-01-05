@@ -1,5 +1,7 @@
 const POLL_ID = "2026-awards";
 const LS_WORKER_URL = "admin:workerUrl";
+const ADMIN_KEY = "benim-gizli-admin-key-2026";
+
 
 const el = (id) => document.getElementById(id);
 
@@ -44,7 +46,7 @@ async function loadMeta() {
 }
 
 async function fetchResultsFull(baseUrl) {
-  const url = `${baseUrl}/results/full?pollId=${encodeURIComponent(POLL_ID)}`;
+const url = `${baseUrl}/results/full?pollId=${encodeURIComponent(POLL_ID)}&key=${encodeURIComponent(ADMIN_KEY)}`;
   const res = await fetch(url);
   const data = await res.json().catch(()=> ({}));
   if (!res.ok || !data.ok) {
