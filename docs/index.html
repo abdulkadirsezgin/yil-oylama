@@ -1,1 +1,48 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Yılın Ödülleri - Oylama</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Yılın Ödülleri - Oylama</h1>
+    <p class="muted">
+      Oylar anonimdir. Token yalnızca “oy kullanıldı” kontrolü için kullanılır; kime oy verdiğin tutulmaz.
+    </p>
+
+    <section class="card">
+      <h2>Oy Kodu (Token)</h2>
+      <div class="row">
+        <input id="tokenInput" type="text" placeholder="Örn: A1B2-C3D4" autocomplete="off" />
+        <button id="btnVerify" type="button">Kontrol Et</button>
+      </div>
+      <p id="tokenStatus" class="status muted">Token girip “Kontrol Et”e bas.</p>
+    </section>
+
+    <div id="pollArea" class="hidden">
+      <section id="categoriesWrap"></section>
+
+      <section class="card">
+        <div class="row space">
+          <div>
+            <div class="muted">Hazır mısın?</div>
+            <div id="completionText" class="status">Seçimler: 0 / 5</div>
+          </div>
+          <button id="btnSubmit" type="button" class="primary" disabled>Oyu Gönder</button>
+        </div>
+        <p id="submitStatus" class="status muted"></p>
+      </section>
+    </div>
+
+    <footer class="muted">
+      <small>© Oylama sayfası (GitHub Pages) + doğrulama (Worker API)</small>
+    </footer>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
 
