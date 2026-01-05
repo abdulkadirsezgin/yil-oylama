@@ -21,6 +21,7 @@ async function loadData() {
   renderCategories();
   updateCompletion();
 }
+
 function resetSelections() {
   // tüm kategorilerde seçimi temizle
   categories.forEach(c => {
@@ -158,13 +159,34 @@ function updateCompletion() {
   el("btnSubmit").disabled = !(verifiedToken && completed === categories.length);
 }
 
+function lockVotingUI(msg) {
+  const cd = el("countdown");
+  if (cd) {
+    cd.textContent = msg;
+    cd.classList.remove("running");
+    cd.classList.add("closed");
+  }
+
+  el("btnVerify").disabled = true;
+  el("btnSubmit").disabled = true;
+
+  const tokenInput = el("tokenInput");
+  if (tokenInput) tokenInput.disabled = true;
+
+  el("pollArea").classList.add("hidden");
+  setStatus(el("tokenStatus"), "Oylama kapandı.", "muted");
+}
+
 async function verifyToken() {
-  const token = el("tokenInput").value.trim();
+  // normalize: boşlukları kırp, büyük harfe çevir
+  const token = el("tokenInput").value.trim().toUpperCase();
   const status = el("tokenStatus");
+
   if (!token) {
     setStatus(status, "Token girmen gerekiyor.", "bad");
     return;
   }
+
   setStatus(status, "Kontrol ediliyor...", "muted");
 
   try {
@@ -184,14 +206,14 @@ async function verifyToken() {
       return;
     }
 
-verifiedToken = token;
+    verifiedToken = token;
 
-// yeni token ile yeni oy başlıyor → önce formu sıfırla
-resetSelections();
+    // yeni token ile yeni oy başlıyor → önce formu sıfırla
+    resetSelections();
 
-setStatus(status, "Token geçerli. Oylamaya başlayabilirsin.", "ok");
-el("pollArea").classList.remove("hidden");
-updateCompletion();
+    setStatus(status, "Token geçerli. Oylamaya başlayabilirsin.", "ok");
+    el("pollArea").classList.remove("hidden");
+    updateCompletion();
 
   } catch (e) {
     verifiedToken = null;
@@ -210,6 +232,52 @@ function buildPayload() {
       personIds: [...(selected[c.id] || new Set())]
     }))
   };
+}
+
+async function startCountdown() {
+  const cdEl = el("countdown");
+  if (!cdEl) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/status`);
+    const data = await res.json().catch(() => ({}));
+    if (!data.ok) throw new Error("Status alınamadı");
+
+    const endAt = Date.parse(data.endAt);
+    const serverNow = Date.parse(data.now);
+    const offset = serverNow - Date.now(); // server-client farkı
+
+    const format = (ms) => {
+      if (ms <= 0) return "00:00:00";
+      const total = Math.floor(ms / 1000);
+      const s = total % 60;
+      const m = Math.floor(total / 60) % 60;
+      const h = Math.floor(total / 3600) % 24;
+      const d = Math.floor(total / 86400);
+      const pad = (n) => String(n).padStart(2, "0");
+      return d > 0
+        ? `${d} gün ${pad(h)}:${pad(m)}:${pad(s)}`
+        : `${pad(h)}:${pad(m)}:${pad(s)}`;
+    };
+
+    const tick = () => {
+      const now = Date.now() + offset;
+      const left = endAt - now;
+
+      if (left <= 0 || data.closed) {
+        lockVotingUI("Oylama sona erdi (09.01.2026 16:35 – Ankara saati)");
+        return;
+      }
+
+      cdEl.textContent = `Kalan süre: ${format(left)} (Ankara saati)`;
+      cdEl.classList.add("running");
+      setTimeout(tick, 1000);
+    };
+
+    tick();
+  } catch (e) {
+    cdEl.textContent = "Sayaç yüklenemedi.";
+  }
 }
 
 async function submitVote() {
@@ -235,6 +303,7 @@ async function submitVote() {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(buildPayload())
     });
+
     const data = await res.json().catch(() => ({}));
 
     if (!res.ok) {
@@ -243,16 +312,16 @@ async function submitVote() {
       return;
     }
 
-setStatus(submitStatus, "Oyun alındı. Teşekkürler!", "ok");
+    setStatus(submitStatus, "Oyun alındı. Teşekkürler!", "ok");
 
-// bir sonraki token için form temiz kalsın
-resetSelections();
+    // bir sonraki token için form temiz kalsın
+    resetSelections();
 
-// token artık kullanıldı: UI’ı kilitle
-verifiedToken = null;
-el("pollArea").classList.add("hidden");
-el("tokenInput").value = "";
-setStatus(el("tokenStatus"), "Token kullanıldı. Tekrar oy kullanılamaz.", "muted");
+    // token artık kullanıldı: UI’ı kilitle
+    verifiedToken = null;
+    el("pollArea").classList.add("hidden");
+    el("tokenInput").value = "";
+    setStatus(el("tokenStatus"), "Token kullanıldı. Tekrar oy kullanılamaz.", "muted");
 
   } catch (e) {
     setStatus(submitStatus, "Bağlantı hatası. Tekrar dene.", "bad");
@@ -263,5 +332,6 @@ setStatus(el("tokenStatus"), "Token kullanıldı. Tekrar oy kullanılamaz.", "mu
 el("btnVerify").addEventListener("click", verifyToken);
 el("btnSubmit").addEventListener("click", submitVote);
 
+// init
 loadData();
-
+startCountdown();
