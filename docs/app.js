@@ -243,13 +243,17 @@ async function submitVote() {
       return;
     }
 
-    setStatus(submitStatus, "Oyun alındı. Teşekkürler!", "ok");
+setStatus(submitStatus, "Oyun alındı. Teşekkürler!", "ok");
 
-    // token artık kullanıldı: UI’ı kilitle
-    verifiedToken = null;
-    el("pollArea").classList.add("hidden");
-    el("tokenInput").value = "";
-    setStatus(el("tokenStatus"), "Token kullanıldı. Tekrar oy kullanılamaz.", "muted");
+// bir sonraki token için form temiz kalsın
+resetSelections();
+
+// token artık kullanıldı: UI’ı kilitle
+verifiedToken = null;
+el("pollArea").classList.add("hidden");
+el("tokenInput").value = "";
+setStatus(el("tokenStatus"), "Token kullanıldı. Tekrar oy kullanılamaz.", "muted");
+
   } catch (e) {
     setStatus(submitStatus, "Bağlantı hatası. Tekrar dene.", "bad");
     updateCompletion();
