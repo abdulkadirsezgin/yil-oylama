@@ -21,6 +21,21 @@ async function loadData() {
   renderCategories();
   updateCompletion();
 }
+function resetSelections() {
+  // tüm kategorilerde seçimi temizle
+  categories.forEach(c => {
+    selected[c.id] = new Set();
+  });
+
+  // chip ve sayaçları güncelle
+  rerenderAllChips();
+
+  // submit mesajını temizle
+  const submitStatus = el("submitStatus");
+  if (submitStatus) submitStatus.textContent = "";
+
+  updateCompletion();
+}
 
 function renderCategories() {
   const wrap = el("categoriesWrap");
