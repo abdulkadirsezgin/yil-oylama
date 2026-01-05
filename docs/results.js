@@ -1,6 +1,6 @@
 const POLL_ID = "2026-awards";
 const LS_WORKER_URL = "admin:workerUrl";
-const LS_ADMIN_KEY = "admin:adminKey";
+const LS_ADMIN_KEY = "admin:ADMIN_KEY";
 
 
 
