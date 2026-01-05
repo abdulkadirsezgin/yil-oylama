@@ -1,4 +1,4 @@
-const API_BASE = "https://YOUR-WORKER.your-subdomain.workers.dev"; // <- değiştir
+const API_BASE = "https://yil-oylama.abdulkadir-sezginn.workers.dev"; // <- değiştir
 const POLL_ID = "2026-awards"; // istersen değiştir
 
 let categories = [];
